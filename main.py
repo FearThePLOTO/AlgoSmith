@@ -1,3 +1,12 @@
+<<<<<<< ai
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+api_key = os.getenv("ANTHROPIC_API_KEY")
+
+ 
+=======
 import sys
 import eel
 
@@ -14,3 +23,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+>>>>>>> main

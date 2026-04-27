@@ -10,7 +10,7 @@ You must follow these rules strictly:
 
 1. Carefully analyze the current algorithm and identify its true time complexity.
 2. Determine whether a better asymptotic complexity is realistically possible. Focus on actual algorithmic improvement (Big-O improvement), not only cleaner syntax or minor micro-optimizations.
-3. If the code can be improved:
+3. If the code can be improved: 
    * Generate a new optimized version of the code with the best practical time complexity.
    * Preserve the original functionality and expected output exactly.
    * Use clear, production-quality Python code.

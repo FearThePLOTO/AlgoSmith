@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlgoSmith</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- SPLASH -->
+    <div id="splash" class="splash">
+        <div class="splash-content">
+            <h1 class="splash-logo">
+                <span class="letter" style="--i:0">A</span>
+                <span class="letter" style="--i:1">L</span>
+                <span class="letter" style="--i:2">G</span>
+                <span class="letter" style="--i:3">O</span>
+                <span class="letter" style="--i:4">S</span>
+                <span class="letter" style="--i:5">M</span>
+                <span class="letter" style="--i:6">I</span>
+                <span class="letter" style="--i:7">T</span>
+                <span class="letter" style="--i:8">H</span>
+            </h1>
+            <div class="splash-loader-circle"></div>
+        </div>
+    </div>
+
+    <!-- APP -->
+    <div id="app" class="app hidden">
+        
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <span class="logo-algo">algo</span><span class="logo-smith">Smith</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <span class="complexity-badge" id="complexity-badge">—</span>
+                <button id="quit-btn" class="quit-btn">Quit</button>
+            </div>
+        </header>
+
+        <!-- SPLIT PANE -->
+        <div class="split-pane">
+            <!-- LEFT: CODE EDITOR -->
+            <div class="pane left-pane">
+                <div class="pane-header">
+                    <span>Code Editor</span>
+                    <div class="selector-wrapper">
+                        <select id="algorithm" class="animated-select">
+                            <option value="custom">Type your own...</option>
+                            <option value="array-index-access">Array Index Access</option>
+                            <option value="linear-search">Linear Search</option>
+                            <option value="binary-search">Binary Search</option>
+                            <option value="merge-sort">Merge Sort</option>
+                            <option value="bubble-sort">Bubble Sort</option>
+                            <option value="matrix-mult">Naive Matrix Multiplication</option>
+                            <option value="fibonacci">Recursive Fibonacci</option>
+                        </select>
+                        <div class="select-arrow">
+                            <svg width="10" height="10" viewBox="0 0 10 6" fill="none">
+                                <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <button id="run-btn" class="run-btn">
+                        <svg id="run-icon" width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M4 2.5v11l9-5.5-9-5.5z"/>
+                        </svg>
+                        Run
+                    </button>
+                </div>
+                <div class="editor-container">
+                    <textarea id="code" spellcheck="false"></textarea>
+                </div>
+                <div class="pane-footer">
+                    <div class="mode-toggle">
+                        <button id="auto-btn" class="mode-btn active" data-mode="auto">Auto</button>
+                        <button id="manual-btn" class="mode-btn" data-mode="manual">Manual</button>
+                    </div>
+                    <input id="input-data" type="text" class="input-field hidden" placeholder="e.g. 5, 3, 8, 1, 9">
+                </div>
+            </div>
+
+            <!-- RESIZER -->
+            <div class="resizer" id="resizer"></div>
+
+            <!-- RIGHT: ANALYSIS -->
+            <div class="pane right-pane">
+                <div class="tabs ai-main-tabs">
+                    <button class="tab active" data-tab="analysis">Analysis</button>
+                    <button class="tab" data-tab="explainer">Explainer</button>
+                    <button class="tab" data-tab="optimizer">Optimizer</button>
+                    <button class="tab" data-tab="bug-detector">Bug Detector</button>
+                    <button class="tab" data-tab="chat">Chat</button>
+                </div>
+                <div class="tab-content">
+                    <div id="analysis" class="tab-panel active">
+                        <div id="analysis-content" style="padding: 20px; overflow-y: auto; height: 100%;">
+                            <div style="text-align: center; color: #7c7468; padding-top: 40px;">
+                                <div style="font-size: 14px;">Run an algorithm to see the analysis</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="explainer" class="tab-panel">
+                        <div style="padding: 20px; overflow-y: auto; height: 100%;">
+                            <div id="explainer-output" class="ai-agent-output professional-card">
+                                <div class="card-title">Complexity Explanation</div>
+                                <div class="card-body muted">Run an algorithm to generate a detailed explanation.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="optimizer" class="tab-panel">
+                        <div style="padding: 20px; overflow-y: auto; height: 100%;">
+                            <div class="ai-tools">
+                                <button id="optimize-btn" class="run-btn">Optimize</button>
+                            </div>
+                            <div id="optimizer-output" class="ai-agent-output professional-card">
+                                <div class="card-title">Optimizer</div>
+                                <div class="card-body muted">Optimization output will appear here.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="bug-detector" class="tab-panel">
+                        <div style="padding: 20px; overflow-y: auto; height: 100%;">
+                            <div class="ai-tools">
+                                <button id="scan-bugs-btn" class="run-btn secondary-btn">Scan Bugs</button>
+                            </div>
+                            <div id="bug-detector-output" class="ai-agent-output professional-card">
+                                <div class="card-title">Bug Detector</div>
+                                <div class="card-body muted">Scan your code for issues and recommended fixes.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="chat" class="tab-panel">
+                        <div class="chat-container">
+                            <div id="chat-messages" class="chat-messages"></div>
+                            <div class="chat-input-area">
+                                <input type="text" id="chat-input" class="chat-input" placeholder="Ask me anything about algorithms, code, or programming...">
+                                <button id="send-chat-btn" class="send-chat-btn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATUS BAR -->
+        <div class="status-bar">
+            <span id="status-text">Ready</span>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="eel.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

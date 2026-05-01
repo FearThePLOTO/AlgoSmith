@@ -1,0 +1,6 @@
+eel
+numpy
+scipy
+matplotlib
+requests
+python-dotenv

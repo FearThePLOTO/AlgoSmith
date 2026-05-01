@@ -80,13 +80,6 @@
                 <div class="editor-container">
                     <textarea id="code" spellcheck="false"></textarea>
                 </div>
-                <div class="pane-footer">
-                    <div class="mode-toggle">
-                        <button id="auto-btn" class="mode-btn active" data-mode="auto">Auto</button>
-                        <button id="manual-btn" class="mode-btn" data-mode="manual">Manual</button>
-                    </div>
-                    <input id="input-data" type="text" class="input-field hidden" placeholder="e.g. 5, 3, 8, 1, 9">
-                </div>
             </div>
 
             <!-- RESIZER -->
@@ -95,14 +88,40 @@
             <!-- RIGHT: ANALYSIS -->
             <div class="pane right-pane">
                 <div class="tabs ai-main-tabs">
-                    <button class="tab active" data-tab="analysis">Analysis</button>
+                    <button class="tab active" data-tab="execute">Execute</button>
+                    <button class="tab" data-tab="analysis">Analysis</button>
                     <button class="tab" data-tab="explainer">Explainer</button>
                     <button class="tab" data-tab="chat">Chat</button>
                     <button class="tab" data-tab="optimizer">Optimizer</button>
                     <button class="tab" data-tab="bug-detector">Bug Detector</button>
                 </div>
                 <div class="tab-content">
-                    <div id="analysis" class="tab-panel active">
+                    <div id="execute" class="tab-panel active">
+                        <div class="execute-container">
+                            <div class="execute-section execute-input-section">
+                                <div class="execute-header">
+                                    <span>Input Arguments</span>
+                                    <div class="execute-hint">Separate arguments with |</div>
+                                </div>
+                                <input type="text" id="execute-input" class="execute-input" placeholder='e.g. 11 2 34 5 | 3  or  [1,2,3] | 5'>
+                                <button id="execute-btn" class="execute-btn">
+                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M4 2.5v11l9-5.5-9-5.5z"/>
+                                    </svg>
+                                    Execute
+                                </button>
+                            </div>
+                            <div class="execute-section execute-output-section">
+                                <div class="execute-header">
+                                    <span>Output</span>
+                                </div>
+                                <div id="execute-output" class="execute-output">
+                                    <div class="execute-empty">Output will appear here</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="analysis" class="tab-panel">
                         <div id="analysis-content" style="padding: 20px; overflow-y: auto; height: 100%;">
                             <div style="text-align: center; color: #7c7468; padding-top: 40px;">
                                 <div style="font-size: 14px;">Run an algorithm to see the analysis</div>
@@ -153,7 +172,7 @@
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
         </div>
 
         <!-- STATUS BAR -->

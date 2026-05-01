@@ -1,3 +1,4 @@
+# Backend setup and app bridge
 import sys
 import os                       
 import eel
@@ -5,6 +6,7 @@ import eel
 BASE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(BASE, 'engine'))
 sys.path.insert(0, os.path.join(BASE, 'ai'))
+sys.path.insert(0, os.path.join(BASE, 'run'))
 
 from engine.bridge_fit import get_performance_report
 from engine.bridge_static import get_code_analysis
@@ -12,13 +14,15 @@ from ai.ai_explainer import explain
 from ai.optimizer import optimize
 from ai.bug_detector import detect_bugs
 from ai.chat import chat
+from run.executor import execute_code
 
+# Eel exposed API for the frontend
 @eel.expose
-def run_algorithm(algorithm, code, input_data):
+def run_algorithm(algorithm, code):
+    # Run the analysis pipeline for the given code
     if not code.strip():
         return {"error": "No code provided."}
 
-    
     try:
         static_result     = get_code_analysis(code)
         static_prediction = static_result.get("complexity", "Unknown")
@@ -56,6 +60,7 @@ def run_algorithm(algorithm, code, input_data):
 
 @eel.expose
 def scan_bugs(code):
+    # Check code for common issues
     if not code.strip():
         return {"ok": False, "message": "No code provided.", "issues": []}
     return detect_bugs(code)
@@ -77,6 +82,12 @@ def get_optimization(code):
 @eel.expose
 def chat_with_ai(message):
     return chat(message)
+
+
+@eel.expose
+def run_execute(code, arguments):
+    # Forward execute request to the runner module
+    return execute_code(code, arguments)
 
 
 def main():

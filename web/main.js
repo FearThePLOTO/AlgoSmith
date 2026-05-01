@@ -1,12 +1,9 @@
+// Main UI script for AlgoSmith
 document.addEventListener("DOMContentLoaded", () => {
   const splash = document.getElementById("splash");
   const app = document.getElementById("app");
   const algorithmSelect = document.getElementById("algorithm");
   const codeEditor = document.getElementById("code");
-  const inputData = document.getElementById("input-data");
-  const inputGroup = document.querySelector(".input-field");
-  const autoBtn = document.getElementById("auto-btn");
-  const manualBtn = document.getElementById("manual-btn");
   const runBtn = document.getElementById("run-btn");
   const tabs = document.querySelectorAll(".tab");
   const tabPanels = document.querySelectorAll(".tab-panel");
@@ -16,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const leftPane = document.querySelector(".left-pane");
   const rightPane = document.querySelector(".right-pane");
 
-  let isManualMode = false;
   let codemirrorEditor = null;
   let chartInstance = null;
 
@@ -58,21 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (algorithmTemplates[alg]) {
       codemirrorEditor.setValue(algorithmTemplates[alg]);
     }
-  });
-
-  // Mode toggle
-  autoBtn.addEventListener("click", () => {
-    isManualMode = false;
-    autoBtn.classList.add("active");
-    manualBtn.classList.remove("active");
-    inputGroup.classList.add("hidden");
-  });
-
-  manualBtn.addEventListener("click", () => {
-    isManualMode = true;
-    manualBtn.classList.add("active");
-    autoBtn.classList.remove("active");
-    inputGroup.classList.remove("hidden");
   });
 
   // Complexity description labels
@@ -274,13 +255,12 @@ document.addEventListener("DOMContentLoaded", () => {
   runBtn.addEventListener("click", async () => {
     const algorithm = algorithmSelect.value;
     const code = codemirrorEditor.getValue();
-    const input = inputData.value;
 
     runBtn.innerHTML = '<span class="spinner"></span> Running...';
     runBtn.disabled = true;
 
     try {
-      const result = await eel.run_algorithm(algorithm, code, input)();
+      const result = await eel.run_algorithm(algorithm, code)();
 
       if (result.error) {
         // Show error in Analysis tab
@@ -330,6 +310,64 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const scanBugsBtn = document.getElementById("scan-bugs-btn");
   const optimizeBtn = document.getElementById("optimize-btn");
+  const executeBtn = document.getElementById("execute-btn");
+  const executeInput = document.getElementById("execute-input");
+  const executeOutput = document.getElementById("execute-output");
+
+  function formatExecuteOutput(value) {
+    if (value === null || value === undefined) {
+      return "None";
+    }
+
+    if (Array.isArray(value)) {
+      return value.join(" ");
+    }
+
+    if (typeof value === "object") {
+      try {
+        return JSON.stringify(value, null, 2);
+      } catch (err) {
+        return String(value);
+      }
+    }
+
+    return String(value);
+  }
+
+  // Execute code
+  executeBtn.addEventListener("click", async () => {
+    const code = codemirrorEditor.getValue();
+    const arguments_str = executeInput.value;
+
+    executeBtn.innerHTML = '<span class="spinner"></span> Running...';
+    executeBtn.disabled = true;
+
+    try {
+      const result = await eel.run_execute(code, arguments_str)();
+
+      if (result.error) {
+        executeOutput.innerHTML = `<div class="execute-output-error">${result.error}</div>`;
+        statusText.textContent = `Execute error: ${result.error}`;
+      } else {
+        const outputString = formatExecuteOutput(result.output);
+        executeOutput.innerHTML = `<div class="execute-output-success">✓ Success</div><div style="margin-top: 8px;">${outputString}</div>`;
+        statusText.textContent = "Code executed successfully";
+      }
+    } catch (error) {
+      executeOutput.innerHTML = `<div class="execute-output-error">Error: ${error.message}</div>`;
+      statusText.textContent = "Execute error";
+    } finally {
+      executeBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11l9-5.5-9-5.5z"/></svg> Execute';
+      executeBtn.disabled = false;
+    }
+  });
+
+  // Allow Enter key in execute input to trigger execution
+  executeInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      executeBtn.click();
+    }
+  });
 
   scanBugsBtn.addEventListener("click", async () => {
     const code = codemirrorEditor.getValue();

@@ -1,3 +1,4 @@
+# Backend setup and app bridge
 import sys
 import os                       
 import eel
@@ -15,12 +16,13 @@ from ai.bug_detector import detect_bugs
 from ai.chat import chat
 from run.executor import execute_code
 
+# Eel exposed API for the frontend
 @eel.expose
-def run_algorithm(algorithm, code, input_data):
+def run_algorithm(algorithm, code):
+    # Run the analysis pipeline for the given code
     if not code.strip():
         return {"error": "No code provided."}
 
-    
     try:
         static_result     = get_code_analysis(code)
         static_prediction = static_result.get("complexity", "Unknown")
@@ -58,6 +60,7 @@ def run_algorithm(algorithm, code, input_data):
 
 @eel.expose
 def scan_bugs(code):
+    # Check code for common issues
     if not code.strip():
         return {"ok": False, "message": "No code provided.", "issues": []}
     return detect_bugs(code)
@@ -83,7 +86,7 @@ def chat_with_ai(message):
 
 @eel.expose
 def run_execute(code, arguments):
-    """Execute user code with provided arguments"""
+    # Forward execute request to the runner module
     return execute_code(code, arguments)
 
 

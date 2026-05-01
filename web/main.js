@@ -1,12 +1,9 @@
+// Main UI script for AlgoSmith
 document.addEventListener("DOMContentLoaded", () => {
   const splash = document.getElementById("splash");
   const app = document.getElementById("app");
   const algorithmSelect = document.getElementById("algorithm");
   const codeEditor = document.getElementById("code");
-  const inputData = document.getElementById("input-data");
-  const inputGroup = document.querySelector(".input-field");
-  const autoBtn = document.getElementById("auto-btn");
-  const manualBtn = document.getElementById("manual-btn");
   const runBtn = document.getElementById("run-btn");
   const tabs = document.querySelectorAll(".tab");
   const tabPanels = document.querySelectorAll(".tab-panel");
@@ -16,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const leftPane = document.querySelector(".left-pane");
   const rightPane = document.querySelector(".right-pane");
 
-  let isManualMode = false;
   let codemirrorEditor = null;
   let chartInstance = null;
 
@@ -58,21 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (algorithmTemplates[alg]) {
       codemirrorEditor.setValue(algorithmTemplates[alg]);
     }
-  });
-
-  // Mode toggle
-  autoBtn.addEventListener("click", () => {
-    isManualMode = false;
-    autoBtn.classList.add("active");
-    manualBtn.classList.remove("active");
-    inputGroup.classList.add("hidden");
-  });
-
-  manualBtn.addEventListener("click", () => {
-    isManualMode = true;
-    manualBtn.classList.add("active");
-    autoBtn.classList.remove("active");
-    inputGroup.classList.remove("hidden");
   });
 
   // Complexity description labels
@@ -274,13 +255,12 @@ document.addEventListener("DOMContentLoaded", () => {
   runBtn.addEventListener("click", async () => {
     const algorithm = algorithmSelect.value;
     const code = codemirrorEditor.getValue();
-    const input = inputData.value;
 
     runBtn.innerHTML = '<span class="spinner"></span> Running...';
     runBtn.disabled = true;
 
     try {
-      const result = await eel.run_algorithm(algorithm, code, input)();
+      const result = await eel.run_algorithm(algorithm, code)();
 
       if (result.error) {
         // Show error in Analysis tab

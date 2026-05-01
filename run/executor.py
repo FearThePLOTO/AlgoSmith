@@ -27,7 +27,7 @@ def execute_code(code, arguments):
         
         func_name = func_match.group(1)
         
-        # Parse arguments intelligently
+        # Parse input values into Python arguments
         args_list = []
         if arguments.strip():
             # Split by pipe character

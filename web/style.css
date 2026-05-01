@@ -183,8 +183,6 @@ button, select, input, textarea { font: inherit; }
     gap: 12px;
 }
 
-.mode-toggle { display: flex; gap: 8px; flex-wrap: wrap; }
-
 .run-btn {
     flex-shrink: 0;
     white-space: nowrap;
@@ -270,34 +268,7 @@ button, select, input, textarea { font: inherit; }
 .tab:hover { transform: translateY(-1px); }
 .tab.active { color: var(--accent); font-weight: 700; }
 
-.mode-toggle { display: flex; gap: 6px; }
-.mode-btn {
-    background: rgba(255,255,255,0.04);
-    color: var(--text2);
-    border: 1px solid rgba(255, 187, 90, 0.14);
-    border-radius: 10px;
-    padding: 8px 14px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease;
-}
-.mode-btn.active {
-    background: rgba(244, 184, 65, 0.18);
-    color: var(--text1);
-    border-color: rgba(244, 184, 65, 0.24);
-}
-
 .hidden { display: none !important; }
-
-.input-field {
-    background: rgba(255,255,255,0.05);
-    color: var(--text1);
-    border: 1px solid rgba(255, 187, 90, 0.14);
-    border-radius: var(--r);
-    padding: 10px 14px;
-    font-size: 13px;
-    width: 240px;
-}
 
 .tabs {
     display: flex;

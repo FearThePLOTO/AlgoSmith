@@ -5,6 +5,7 @@ import eel
 BASE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(BASE, 'engine'))
 sys.path.insert(0, os.path.join(BASE, 'ai'))
+sys.path.insert(0, os.path.join(BASE, 'run'))
 
 from engine.bridge_fit import get_performance_report
 from engine.bridge_static import get_code_analysis
@@ -12,6 +13,7 @@ from ai.ai_explainer import explain
 from ai.optimizer import optimize
 from ai.bug_detector import detect_bugs
 from ai.chat import chat
+from run.executor import execute_code
 
 @eel.expose
 def run_algorithm(algorithm, code, input_data):
@@ -77,6 +79,12 @@ def get_optimization(code):
 @eel.expose
 def chat_with_ai(message):
     return chat(message)
+
+
+@eel.expose
+def run_execute(code, arguments):
+    """Execute user code with provided arguments"""
+    return execute_code(code, arguments)
 
 
 def main():

@@ -330,6 +330,64 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const scanBugsBtn = document.getElementById("scan-bugs-btn");
   const optimizeBtn = document.getElementById("optimize-btn");
+  const executeBtn = document.getElementById("execute-btn");
+  const executeInput = document.getElementById("execute-input");
+  const executeOutput = document.getElementById("execute-output");
+
+  function formatExecuteOutput(value) {
+    if (value === null || value === undefined) {
+      return "None";
+    }
+
+    if (Array.isArray(value)) {
+      return value.join(" ");
+    }
+
+    if (typeof value === "object") {
+      try {
+        return JSON.stringify(value, null, 2);
+      } catch (err) {
+        return String(value);
+      }
+    }
+
+    return String(value);
+  }
+
+  // Execute code
+  executeBtn.addEventListener("click", async () => {
+    const code = codemirrorEditor.getValue();
+    const arguments_str = executeInput.value;
+
+    executeBtn.innerHTML = '<span class="spinner"></span> Running...';
+    executeBtn.disabled = true;
+
+    try {
+      const result = await eel.run_execute(code, arguments_str)();
+
+      if (result.error) {
+        executeOutput.innerHTML = `<div class="execute-output-error">${result.error}</div>`;
+        statusText.textContent = `Execute error: ${result.error}`;
+      } else {
+        const outputString = formatExecuteOutput(result.output);
+        executeOutput.innerHTML = `<div class="execute-output-success">✓ Success</div><div style="margin-top: 8px;">${outputString}</div>`;
+        statusText.textContent = "Code executed successfully";
+      }
+    } catch (error) {
+      executeOutput.innerHTML = `<div class="execute-output-error">Error: ${error.message}</div>`;
+      statusText.textContent = "Execute error";
+    } finally {
+      executeBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11l9-5.5-9-5.5z"/></svg> Execute';
+      executeBtn.disabled = false;
+    }
+  });
+
+  // Allow Enter key in execute input to trigger execution
+  executeInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      executeBtn.click();
+    }
+  });
 
   scanBugsBtn.addEventListener("click", async () => {
     const code = codemirrorEditor.getValue();
